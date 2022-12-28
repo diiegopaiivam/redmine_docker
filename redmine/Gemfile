@@ -32,6 +32,7 @@ gem 'tzinfo-data', platforms: [:mingw, :x64_mingw, :mswin]
 gem 'rotp', '>= 5.0.0'
 gem 'rqrcode'
 
+gem 'byebug'
 # Optional gem for LDAP authentication
 group :ldap do
   gem 'net-ldap', '~> 0.17.0'

@@ -1,0 +1,45 @@
+<%= error_messages_for 'create_project' %>
+
+<div class="box tabular">
+<!--[form:project]-->
+<p><%= f.text_field :name, :required => true, :size => 60 %></p>
+
+<p><%= f.text_area :description, :rows => 8, :class => 'wiki-edit' %></p>
+<p><%= f.text_field :identifier, :required => true, :size => 60, :disabled => @create_project.identifier_frozen?, :maxlength => CreateProject::IDENTIFIER_MAX_LENGTH %>
+
+<% unless @create_project.identifier_frozen? %>
+  <em class="info"><%= l(:text_length_between, :min => 1, :max => CreateProject::IDENTIFIER_MAX_LENGTH) %> <%= l(:text_project_identifier_info).html_safe %></em>
+<% end %></p>
+
+<p>
+  <%= f.check_box :is_public %>
+  <em class="info"><%= Setting.login_required? ? l(:text_project_is_public_non_member) : l(:text_project_is_public_anonymous) %></em>
+</p>
+
+
+<% if @project.safe_attribute? 'inherit_members' %>
+<p><%= f.check_box :inherit_members %></p>
+<% end %>
+
+<%= wikitoolbar_for 'project_description' %>
+
+<% @project.visible_custom_field_values.each do |value| %>
+  <p><%= custom_field_tag_with_label :create_project, value %></p>
+<% end %>
+<%= call_hook(:view_projects_form, :project => @project, :form => f) %>
+</div>
+
+<% if @project.safe_attribute?('enabled_module_names') %>
+<fieldset class="box tabular" id="project_modules"><legend><%= toggle_checkboxes_link('#project_modules input[type="checkbox"]') %><%= l(:label_module_plural) %></legend>
+<% Redmine::AccessControl.available_project_modules.each do |m| %>
+    <label class="floating">
+    <%= check_box_tag 'project[enabled_module_names][]', m, @project.module_enabled?(m), :id => "project_enabled_module_names_#{m}" %>
+    <%= l_or_humanize(m, :prefix => "project_module_") %>
+    </label>
+<% end %>
+<%= hidden_field_tag 'project[enabled_module_names][]', '' %>
+</fieldset>
+<% end %>
+
+<!--[eoform:project]-->
+

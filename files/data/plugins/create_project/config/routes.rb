@@ -1,2 +1,2 @@
-# Plugin's routes
-# See: http://guides.rubyonrails.org/routing.html
+get 'create_projects', to: 'create_projects#new'
+post 'create_projects', to: 'create_projects#create'
